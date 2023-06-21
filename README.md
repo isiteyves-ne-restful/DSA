@@ -24,7 +24,8 @@ Welcome to the Inventory System! This system allows you to manage your inventory
 ## Requirements
 
 - C++ compiler
-- Libraries: `iostream`, `string`, `fstream`, `vector`, `algorithm`
+- Libraries: `iostream`, `fstream`, `vector`, `algorithm`, `iomanip`
+- No worries💪😀The libraries are all built-in if you have a C++ compiler🥳
 
 ## Getting Started
 
