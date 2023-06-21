@@ -69,11 +69,7 @@ public:
         // Check if the ID is already taken
         for (const auto &item : items)
         {
-<<<<<<< HEAD
             if (item.getItemID() == id)
-=======
-            if (item.getItemId() == id)
->>>>>>> 8cdb19e56aab40b136445d97f8d04afede45f6be
             {
                 cout << "Error: Item with ID " << id << " already exists." << endl;
                 return;
