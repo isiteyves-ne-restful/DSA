@@ -1,12 +1,8 @@
 #include <iostream>
-#include <string>
-#include <sstream>
 #include <fstream>
 #include <vector>
 #include <algorithm>
-#include <ctime>
 #include <iomanip>
-#include <locale>
 
 using namespace std;
 
