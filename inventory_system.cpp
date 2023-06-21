@@ -202,9 +202,9 @@ int main()
         getline(cin, command);
 
         // handle different cases according to the entered command (case insensitive)
-        if (toLowercase(command.substr(0, 8)) == "itemadd ")
+        if (toLowercase(command.substr(0, 7)) == "itemadd")
         {
-            string recordCommand = command.substr(8);
+            string recordCommand = command.substr(7);
             size_t firstSpacePos = recordCommand.find(' ');
             size_t secondSpacePos = recordCommand.find(' ', firstSpacePos + 1);
             size_t thirdSpacePos = recordCommand.find(' ', secondSpacePos + 1);
