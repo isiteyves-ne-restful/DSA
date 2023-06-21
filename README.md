@@ -1,4 +1,4 @@
-# 📦 Inventory System README 📦
+# 📦 Inventory System 📦
 
 Welcome to the Inventory System! This system allows you to manage your inventory by adding items, listing them, and more.
 
