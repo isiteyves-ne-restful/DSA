@@ -46,7 +46,7 @@ public:
     string toString() const
     {
         stringstream ss;
-        ss << "Item ID: " << itemID << "\tItem Name: " << itemName << "\tQuantity: " << quantity << "\tReg Date: " << registrationDate;
+        ss << "Item ID: " << itemID << "\tItem Name: " << itemName << "\tQuantity : " << quantity << "\tReg Date: " << registrationDate;
         return ss.str();
     }
 };
@@ -67,47 +67,39 @@ public:
     void addItem(int id, const string &name, int quantity, const string &regDate)
     {
         Item item(id, name, quantity, regDate);
-        items.push_back(item);
+        ofstream file(fileName, ios::app);
+        if (file.is_open())
+        {
+            file << id << "," << name << "," << quantity << "," << regDate << "\n";
+            file.close();
+            // add item to existing items
+            items.push_back(item);
+            cout << "Item saved successfully!" << endl;
+        }
+        else
+        {
+            cout << "Unable to open the file." << endl;
+        }
     }
 
-    // Function to list items in alphabetical order
+    // Function to list items in ascending order of their ID
     void listItems()
     {
-        // Check if there are any items and display  message if not
+        // Check if there are any items and display a message if not
         if (items.empty())
         {
             cout << "No items are recorded yet." << endl;
             return;
         }
 
-        // OTHERWISE (IF THERE ARE ITEMS)
-        // Sort items in alphabetical order
+        // Sort items in ascending order of their ID
         sort(items.begin(), items.end(), [](const Item &a, const Item &b)
-             { return a.getItemName() < b.getItemName(); });
+             { return a.getItemID() < b.getItemID(); });
 
-        // Display items looping through the vector
+        // Display items by looping through the vector
         for (const auto &item : items)
         {
             cout << item.toString() << endl;
-        }
-    }
-
-    // Function to save items to a file
-    void saveItems()
-    {
-        ofstream file(fileName);
-        if (file.is_open())
-        {
-            for (const auto &item : items)
-            {
-                file << item.getItemID() << "," << item.getItemName() << "," << item.getQuantity() << "," << item.getRegistrationDate() << "\n";
-            }
-            file.close();
-            cout << "Items saved successfully!" << endl;
-        }
-        else
-        {
-            cout << "Unable to open the file." << endl;
         }
     }
 
@@ -138,7 +130,7 @@ public:
                 }
             }
             file.close();
-            cout << "Stored Items loaded successfully!" << endl;
+            cout << "Stored Items have been loaded successfully!" << endl;
         }
         else
         {
@@ -184,8 +176,9 @@ int main()
 
     string command;
     cout << "--------------------------------------" << endl;
-    cout << "*          INVENTORY SYSTEM            *" << endl;
+    cout << "*       RCA INVENTORY SYSTEM            *" << endl;
     cout << "--------------------------------------" << endl;
+    cout << "Developed and maintained by: SW Engineer. ISITE Yves" << endl;
 
     // load items from the file and tell the user when they are ready
     inventory.loadItems();
@@ -198,34 +191,31 @@ int main()
         cout << "\nEnter a command> ";
         getline(cin, command);
 
-        // Convert the command to lowercase
-        command = toLowercase(command);
-
-        // handle different cases according to the entered command
-        if (command == "itemadd")
+        // handle different cases according to the entered command (case insensitive)
+        if (toLowercase(command.substr(0, 8)) == "itemadd ")
         {
-            int id, quantity;
-            string name, regDate;
+            string recordCommand = command.substr(8);
+            size_t firstSpacePos = recordCommand.find(' ');
+            size_t secondSpacePos = recordCommand.find(' ', firstSpacePos + 1);
+            size_t thirdSpacePos = recordCommand.find(' ', secondSpacePos + 1);
 
-            cout << "Enter item ID: ";
-            cin >> id;
-            cin.ignore();
+            if (firstSpacePos != string::npos && secondSpacePos != string::npos)
+            {
+                int id = stoi(recordCommand.substr(0, firstSpacePos));
+                string name = recordCommand.substr(firstSpacePos + 1, secondSpacePos - firstSpacePos - 1);
+                int quantity = stoi(recordCommand.substr(secondSpacePos + 1, thirdSpacePos - secondSpacePos - 1));
+                string regDate = recordCommand.substr(thirdSpacePos + 1);
 
-            cout << "Enter item name: ";
-            getline(cin, name);
-
-            cout << "Enter item quantity: ";
-            cin >> quantity;
-            cin.ignore();
-
-            cout << "Enter item registration date: ";
-            getline(cin, regDate);
-
-            inventory.addItem(id, name, quantity, regDate);
-            inventory.saveItems();
-
-            cout << "Item added successfully!\n";
+                // Call the recordDiseaseCases function with the provided arguments
+                inventory.addItem(id, name, quantity, regDate);
+            }
+            else
+            {
+                cout << "Invalid format. Enter data in the following format:\n";
+                cout << "itemadd <item_id> <item_name> <quantity> <registration_date>\n";
+            }
         }
+
         else if (command == "itemslist")
         {
             inventory.listItems();
