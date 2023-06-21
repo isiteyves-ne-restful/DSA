@@ -42,11 +42,32 @@ public:
     }
 
     // Function to format item details as a string
-    string toString() const
+    string toString(const vector<Item> &items) const
     {
         stringstream ss;
         ss << "Item ID:" << itemID << "\tItem Name:" << itemName;
-        ss << "\tQuantity :" << quantity << "\tReg Date :" << registrationDate;
+
+        // Calculate the length of the longest name in the list
+        size_t longestNameLength = 0;
+        for (const auto &item : items)
+        {
+            size_t nameLength = item.getItemName().length();
+            if (nameLength > longestNameLength)
+            {
+                longestNameLength = nameLength;
+            }
+        }
+
+        // Calculate the number of tabs needed to align the "Quantity" string
+        size_t numTabs = (longestNameLength / 8 + 1) * 2; // Assuming tab width is 8 characters
+
+        // Append the tabs before the "Quantity" string
+        for (size_t i = 0; i < numTabs; ++i)
+        {
+            ss << "\t";
+        }
+
+        ss << "Quantity :" << quantity << "\tReg Date :" << registrationDate;
         return ss.str();
     }
 };
@@ -64,7 +85,7 @@ public:
         : fileName(file) {}
 
     // Function to add an item to the inventory
-    void addItem(int item_id, const string &item_name, int item_quantity, const string &item_registration_date)
+    void addItem(int id, const string &name, int quantity, const string &regDate)
     {
         // Check if the ID is already taken in the CSV file
         ifstream file1(fileName);
@@ -77,9 +98,9 @@ public:
                 string itemIdStr;
                 getline(ss, itemIdStr, ',');
                 int itemId = stoi(itemIdStr);
-                if (itemId == item_id)
+                if (itemId == id)
                 {
-                    cout << "Error: Item with ID " << item_id << " already exists." << endl;
+                    cout << "Error: Item with ID " << id << " already exists." << endl;
                     file1.close();
                     return;
                 }
@@ -87,11 +108,11 @@ public:
             file1.close();
         }
 
-        Item item(item_id, item_name, item_quantity, item_registration_date);
+        Item item(id, name, quantity, regDate);
         ofstream file(fileName, ios::app);
         if (file.is_open())
         {
-            file << item_id << "," << item_name << "," << item_quantity << "," << item_registration_date << "\n";
+            file << id << "," << name << "," << quantity << "," << regDate << "\n";
             file.close();
             // add item to existing items
             items.push_back(item);
@@ -123,7 +144,7 @@ public:
         // Display items by looping through the vector
         for (const auto &item : items)
         {
-            cout << item.toString() << endl;
+            cout << item.toString(items) << endl;
         }
     }
 
@@ -131,7 +152,6 @@ public:
     void loadItems()
     {
         items.clear();
-        int itemNumber = 0;
         ifstream file(fileName);
         if (file.is_open())
         {
@@ -152,18 +172,11 @@ public:
                     int quantity = stoi(tokens[2]);
                     string regDate = tokens[3];
                     Item item(id, name, quantity, regDate);
-                    itemNumber += 1;
                     items.push_back(item);
-                }
-                else
-                {
-                    cout << "Error: Invalid data in the file." << endl;
-                    break;
                 }
             }
             file.close();
-            cout << "Stored Items have been loaded successfully! They are "
-                 << itemNumber << "\n"
+            cout << "Stored Items have been loaded successfully!\n"
                  << endl;
         }
         else
@@ -216,7 +229,7 @@ int main()
 {
     try
     {
-        // create an inventory object instance and also pass the CSV file name
+        // create an inventory object instance
         Inventory inventory("items.csv");
 
         string command;
@@ -311,21 +324,19 @@ int main()
                 }
             }
 
-            else if (toLowercase(command) == "itemslist")
+            else if (command == "itemslist")
             {
                 inventory.listItems();
             }
-            else if (toLowercase(command) == "help")
+            else if (command == "help")
             {
                 displayHelp();
             }
-            else if (
-                toLowercase(command) == "clear" || toLowercase(command) == "clear " || toLowercase(command) == "cls" || toLowercase(command) == "cls ")
+            else if (command == "clear" || command == "cls")
             {
                 clearScreen(); // Clear the console screen
             }
-            else if (
-                toLowercase(command) == "exit")
+            else if (command == "exit")
             {
                 cout << "Exiting the program...\n";
                 break;
