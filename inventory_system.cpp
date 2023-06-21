@@ -102,9 +102,9 @@ public:
             return;
         }
 
-        // Sort items in ascending order of their ID
+        // Sort items in ascending order of their name
         sort(items.begin(), items.end(), [](const Item &a, const Item &b)
-             { return a.getItemID() < b.getItemID(); });
+             { return a.getItemName() < b.getItemName(); });
 
         // Display items by looping through the vector
         for (const auto &item : items)
