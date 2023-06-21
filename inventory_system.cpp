@@ -217,7 +217,7 @@ int main()
                 {
                     id = stoi(recordCommand.substr(0, firstSpacePos));
                 }
-                catch (const std::exception &e)
+                catch (const exception &e)
                 {
                     // display an error message
                     cout << "Error: Invalid ID.Must be a valid integer" << endl;
@@ -232,7 +232,7 @@ int main()
                 {
                     quantity = stoi(recordCommand.substr(secondSpacePos + 1, thirdSpacePos - secondSpacePos - 1));
                 }
-                catch (const std::exception &e)
+                catch (const exception &e)
                 {
                     // display an error message
                     cout << "Error: Invalid quantity.Must be a valid integer." << endl;
