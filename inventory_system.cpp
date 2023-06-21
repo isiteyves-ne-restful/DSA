@@ -211,9 +211,31 @@ int main()
 
             if (firstSpacePos != string::npos && secondSpacePos != string::npos)
             {
-                int id = stoi(recordCommand.substr(0, firstSpacePos));
+                int id = 0;
+                try
+                {
+                    id = stoi(recordCommand.substr(0, firstSpacePos));
+                }
+                catch (const std::exception &e)
+                {
+                    // display an error message
+                    cout << "Error: Invalid ID.Must be a valid integer" << endl;
+                    // continue because user entered invalid data
+                    continue;
+                }
                 string name = recordCommand.substr(firstSpacePos + 1, secondSpacePos - firstSpacePos - 1);
-                int quantity = stoi(recordCommand.substr(secondSpacePos + 1, thirdSpacePos - secondSpacePos - 1));
+                int quantity = 0;
+                try
+                {
+                    quantity = stoi(recordCommand.substr(secondSpacePos + 1, thirdSpacePos - secondSpacePos - 1));
+                }
+                catch (const std::exception &e)
+                {
+                    // display an error message
+                    cout << "Error: Invalid quantity.Must be a valid integer." << endl;
+                    // continue because user entered invalid data
+                    continue;
+                }
                 string regDate = recordCommand.substr(thirdSpacePos + 1);
 
                 // Call the recordDiseaseCases function with the provided arguments
