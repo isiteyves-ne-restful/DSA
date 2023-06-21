@@ -183,11 +183,11 @@ string toLowercase(const string &str)
 }
 
 // function to check if a date is valid
-bool isValidDate(const std::string &dateStr, const std::string &format)
+bool isValidDate(const string &dateStr, const string &format)
 {
-    std::tm tm = {};
-    std::istringstream ss(dateStr);
-    ss >> std::get_time(&tm, format.c_str());
+    tm tm = {};
+    istringstream ss(dateStr);
+    ss >> get_time(&tm, format.c_str());
     return !ss.fail();
 }
 
