@@ -66,6 +66,16 @@ public:
     // Function to add an item to the inventory
     void addItem(int id, const string &name, int quantity, const string &regDate)
     {
+        // Check if the ID is already taken
+        for (const auto &item : items)
+        {
+            if (item.getItemId() == id)
+            {
+                cout << "Error: Item with ID " << id << " already exists." << endl;
+                return;
+            }
+        }
+
         Item item(id, name, quantity, regDate);
         ofstream file(fileName, ios::app);
         if (file.is_open())
