@@ -4,6 +4,9 @@
 #include <fstream>
 #include <vector>
 #include <algorithm>
+#include <ctime>
+#include <iomanip>
+#include <locale>
 
 using namespace std;
 
@@ -179,6 +182,15 @@ string toLowercase(const string &str)
     return lowercaseStr;
 }
 
+// function to check if a date is valid
+bool isValidDate(const std::string &dateStr, const std::string &format)
+{
+    std::tm tm = {};
+    std::istringstream ss(dateStr);
+    ss >> std::get_time(&tm, format.c_str());
+    return !ss.fail();
+}
+
 int main()
 {
     // create an inventory object instance
@@ -247,6 +259,12 @@ int main()
                 }
 
                 string regDate = addCommand.substr(thirdSpacePos + 1);
+                // Validate regDate as a valid date (format: YYYY-MM-DD)
+                if (!isValidDate(regDate, "%Y-%m-%d"))
+                {
+                    cout << "Invalid date format. Please enter the date in the format YYYY-MM-DD." << endl;
+                    continue;
+                }
 
                 // Call the recordDiseaseCases function with the provided arguments
                 inventory.addItem(id, name, quantity, regDate);
