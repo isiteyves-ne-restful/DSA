@@ -202,12 +202,18 @@ int main()
         getline(cin, command);
 
         // handle different cases according to the entered command (case insensitive)
-        if (toLowercase(command.substr(0, 7)) == "itemadd")
+        if (toLowercase(command) == "itemadd" || toLowercase(command.substr(0, 8)) == "itemadd ")
         {
-            string recordCommand = command.substr(7);
-            size_t firstSpacePos = recordCommand.find(' ');
-            size_t secondSpacePos = recordCommand.find(' ', firstSpacePos + 1);
-            size_t thirdSpacePos = recordCommand.find(' ', secondSpacePos + 1);
+            if (toLowercase(command) == "itemadd")
+            {
+                cout << "Invalid format. Enter data in the following format:\n";
+                cout << "itemadd <item_id> <item_name> <quantity> <registration_date>\n";
+                continue;
+            }
+            string addCommand = command.substr(8);
+            size_t firstSpacePos = addCommand.find(' ');
+            size_t secondSpacePos = addCommand.find(' ', firstSpacePos + 1);
+            size_t thirdSpacePos = addCommand.find(' ', secondSpacePos + 1);
 
             if (firstSpacePos != string::npos && secondSpacePos != string::npos)
             {
@@ -215,7 +221,7 @@ int main()
 
                 try
                 {
-                    id = stoi(recordCommand.substr(0, firstSpacePos));
+                    id = stoi(addCommand.substr(0, firstSpacePos));
                 }
                 catch (const exception &e)
                 {
@@ -225,12 +231,12 @@ int main()
                     continue;
                 }
 
-                string name = recordCommand.substr(firstSpacePos + 1, secondSpacePos - firstSpacePos - 1);
+                string name = addCommand.substr(firstSpacePos + 1, secondSpacePos - firstSpacePos - 1);
                 int quantity = 0;
 
                 try
                 {
-                    quantity = stoi(recordCommand.substr(secondSpacePos + 1, thirdSpacePos - secondSpacePos - 1));
+                    quantity = stoi(addCommand.substr(secondSpacePos + 1, thirdSpacePos - secondSpacePos - 1));
                 }
                 catch (const exception &e)
                 {
@@ -240,7 +246,7 @@ int main()
                     continue;
                 }
 
-                string regDate = recordCommand.substr(thirdSpacePos + 1);
+                string regDate = addCommand.substr(thirdSpacePos + 1);
 
                 // Call the recordDiseaseCases function with the provided arguments
                 inventory.addItem(id, name, quantity, regDate);
